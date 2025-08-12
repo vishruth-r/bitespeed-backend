@@ -131,6 +131,14 @@ The server will start on the port specified in your `.env` file (default: 3000).
 
 ## API Documentation
 
+### Live API Endpoint
+
+The API is deployed and can be accessed at:
+
+**[https://bitespeed-backend-s9x9.onrender.com/api/identify](https://bitespeed-backend-s9x9.onrender.com/api/identify)**
+
+You can test the API directly using this URL with tools like Postman, curl, or any HTTP client.
+
 ### Identify Contact API
 
 **Endpoint:** `POST /api/identify`
@@ -154,6 +162,13 @@ Both fields are optional, but at least one must be provided.
     "secondaryContactIds": []
   }
 }
+```
+
+**Example curl request:**
+```bash
+curl -X POST https://bitespeed-backend-s9x9.onrender.com/api/identify \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "phoneNumber": "+1234567890"}'
 ```
 
 ### Health Check API
@@ -218,10 +233,9 @@ The codebase follows TypeScript best practices with:
 
 ## Testing
 
-The repository includes test scripts to verify the identity reconciliation functionality:
+The repository includes a test script to verify the identity reconciliation functionality:
 
-1. `simpletest.js`: A simple test script using the Node.js http module
-2. `test.js`: A more comprehensive test suite using node-fetch
+`test.js`: A comprehensive test suite using node-fetch
 
 Run the tests after starting the server:
 
@@ -231,8 +245,6 @@ npm run dev
 
 # In another terminal, run the tests
 node test.js
-# or
-node simpletest.js
 ```
 
 ## Deployment
@@ -248,3 +260,10 @@ npm run build
 ```bash
 npm start
 ```
+
+### Current Deployment
+
+This service is currently deployed on Render at:
+- **URL**: [https://bitespeed-backend-s9x9.onrender.com](https://bitespeed-backend-s9x9.onrender.com)
+- **Health Check**: [https://bitespeed-backend-s9x9.onrender.com/api/health](https://bitespeed-backend-s9x9.onrender.com/api/health)
+- **Identity API**: [https://bitespeed-backend-s9x9.onrender.com/api/identify](https://bitespeed-backend-s9x9.onrender.com/api/identify)

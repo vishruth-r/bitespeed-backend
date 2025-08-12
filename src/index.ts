@@ -5,6 +5,7 @@ dotenv.config();
 
 import contactRoutes from './routes/contactRoutes';
 import identityRoutes from './routes/identityRoutes';
+import healthRoutes from './routes/healthRoutes';
 import { PORT } from './config/server';
 
 const app = express();
@@ -17,6 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api', contactRoutes);
 app.use('/api', identityRoutes);
+app.use('/api', healthRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

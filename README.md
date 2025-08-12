@@ -11,6 +11,7 @@ The Identity Reconciliation Service is designed to track and manage customer ide
 - Identity resolution based on email and phone number
 - Automated contact linking with primary/secondary relationship management
 - RESTful API for contact identification
+- Health check endpoint for monitoring
 - Integration with PostgreSQL database hosted on Supabase for data persistence
 
 ## Tech Stack
@@ -38,7 +39,8 @@ bitespeed-backend/
 │   │   └── contact.ts
 │   ├── routes/
 │   │   ├── contactRoutes.ts
-│   │   └── identityRoutes.ts
+│   │   ├── identityRoutes.ts
+│   │   └── healthRoutes.ts
 │   ├── services/
 │   │   └── contactService.ts
 │   ├── utils/
@@ -154,7 +156,17 @@ Both fields are optional, but at least one must be provided.
 }
 ```
 
+### Health Check API
 
+**Endpoint:** `GET /api/health`
+
+**Response:**
+```json
+{
+  "status": "UP",
+  "timestamp": "2025-08-12T12:34:56.789Z"
+}
+```
 
 ## Business Logic
 

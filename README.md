@@ -11,7 +11,6 @@ The Identity Reconciliation Service is designed to track and manage customer ide
 - Identity resolution based on email and phone number
 - Automated contact linking with primary/secondary relationship management
 - RESTful API for contact identification
-- Health check endpoint for monitoring
 - Integration with PostgreSQL database hosted on Supabase for data persistence
 
 ## Tech Stack
@@ -39,8 +38,7 @@ bitespeed-backend/
 │   │   └── contact.ts
 │   ├── routes/
 │   │   ├── contactRoutes.ts
-│   │   ├── identityRoutes.ts
-│   │   └── healthRoutes.ts
+│   │   └── identityRoutes.ts
 │   ├── services/
 │   │   └── contactService.ts
 │   ├── utils/
@@ -156,17 +154,7 @@ Both fields are optional, but at least one must be provided.
 }
 ```
 
-### Health Check API
 
-**Endpoint:** `GET /api/health`
-
-**Response:**
-```json
-{
-  "status": "UP",
-  "timestamp": "2025-08-12T12:34:56.789Z"
-}
-```
 
 ## Business Logic
 
@@ -174,19 +162,22 @@ The service implements the following business logic for contact identification:
 
 1. When a request is received with an email and/or phone number:
    - The system searches for existing contacts with the provided email or phone number.
+   - If any secondary contacts are found, their primary contacts are also retrieved to ensure complete contact linkage.
    
 2. If no contacts exist:
    - A new primary contact is created with the provided information.
+   - The service returns it with an empty array for `secondaryContactIds`.
 
 3. If one or more contacts exist:
    - The system consolidates the information under a single primary contact.
    - If multiple primary contacts are found, the oldest one is kept as primary and others are converted to secondary.
    - Secondary contacts are linked to the primary contact through the `linkedId` field.
+   - If an incoming request has either phoneNumber or email common to an existing contact but contains new information, a new secondary contact is created.
 
-4. The response includes:
+4. The response always includes:
    - The primary contact ID
-   - All unique emails associated with the contact
-   - All unique phone numbers associated with the contact
+   - All unique emails associated with the contact (sorted with primary contact's email first)
+   - All unique phone numbers associated with the contact (sorted with primary contact's phone first)
    - IDs of all secondary contacts linked to the primary contact
 
 ## Error Handling
@@ -212,6 +203,25 @@ The codebase follows TypeScript best practices with:
 - Strong typing
 - Separation of concerns
 - Service-oriented architecture
+
+## Testing
+
+The repository includes test scripts to verify the identity reconciliation functionality:
+
+1. `simpletest.js`: A simple test script using the Node.js http module
+2. `test.js`: A more comprehensive test suite using node-fetch
+
+Run the tests after starting the server:
+
+```bash
+# Start the server
+npm run dev
+
+# In another terminal, run the tests
+node test.js
+# or
+node simpletest.js
+```
 
 ## Deployment
 

@@ -26,6 +26,18 @@ export const identifyContact = async (req: Request, res: Response): Promise<void
       });
       return;
     }
+    
+    const secondaryContacts = existingContacts.filter(c => c.linkPrecedence === 'secondary' && c.linkedId);
+    if (secondaryContacts.length > 0) {
+      const primaryIds = [...new Set(secondaryContacts.map(c => c.linkedId as number))];
+      
+      for (const primaryId of primaryIds) {
+        const primaryContact = await contactService.findAllRelatedContacts(primaryId);
+        existingContacts.push(...primaryContact.filter(
+          pc => !existingContacts.some(ec => ec.id === pc.id)
+        ));
+      }
+    }
 
     const primaryContacts = existingContacts.filter(c => c.linkPrecedence === 'primary');
     
